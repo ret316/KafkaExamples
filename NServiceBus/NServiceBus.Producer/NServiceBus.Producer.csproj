@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>6449e062-5c24-4f28-a841-583986029a8a</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..</DockerfileContext>
+    <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+  	<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
+  	<PackageReference Include="NServiceBus.Extensions.Hosting" Version="3.0.0" />
+  	<PackageReference Include="NServiceBus.Transports.Kafka" Version="0.8.5" />
+  	<PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\KafkaExamples.ServiceDefaults\KafkaExamples.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\NServiceBus.Shared\NServiceBus.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

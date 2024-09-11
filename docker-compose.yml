@@ -1,0 +1,128 @@
+services:
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "22181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - "29091:29091"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9091,PLAINTEXT_HOST://localhost:29091
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui
+    depends_on:
+      - kafka
+    ports:
+      - "8082:8080"
+    restart: always
+    environment:
+        KAFKA_CLUSTERS_0_NAME: broker-1
+        KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9091
+
+  masstransit.consumer:
+    image: ${DOCKER_REGISTRY-}masstransitconsumer
+    depends_on:
+      - kafka
+    build:
+      context: .
+      dockerfile: MassTransit/MassTransit.Consumer/Dockerfile
+    ports:
+      - 9001:8080
+      - 9002:8081
+
+  masstransit.producer:
+    image: ${DOCKER_REGISTRY-}masstransitproducer
+    depends_on:
+      - kafka
+    build:
+      context: .
+      dockerfile: MassTransit/MassTransit.Producer/Dockerfile
+    ports:
+      - 9002:8080
+      - 9003:8081
+
+  confluentkafka.consumer:
+    image: ${DOCKER_REGISTRY-}confluentkafkaconsumer
+    depends_on:
+      - kafka
+    build:
+      context: .
+      dockerfile: ConfluentKafka/ConfluentKafka.Consumer/Dockerfile
+    ports:
+      - 9011:8080
+      - 9012:8081
+
+
+  confluentkafka.producer:
+    image: ${DOCKER_REGISTRY-}confluentkafkaproducer
+    depends_on:
+      - kafka
+    build:
+      context: .
+      dockerfile: ConfluentKafka/ConfluentKafka.Producer/Dockerfile
+    ports:
+      - 9013:8080
+      - 9014:8081
+
+
+  nservicebus.consumer:
+    image: ${DOCKER_REGISTRY-}nservicebusconsumer
+    depends_on:
+      - kafka
+    build:
+      context: .
+      dockerfile: NServiceBus/NServiceBus.Consumer/Dockerfile
+    ports:
+      - 9021:8080
+      - 9022:8081
+
+
+  nservicebus.producer:
+    image: ${DOCKER_REGISTRY-}nservicebusproducer
+    depends_on:
+      - kafka
+    build:
+      context: .
+      dockerfile: NServiceBus/NServiceBus.Producer/Dockerfile
+    ports:
+      - 9023:8080
+      - 9024:8081
+
+
+  rebus.consumer:
+    image: ${DOCKER_REGISTRY-}rebusconsumer
+    depends_on:
+      - kafka
+    build:
+      context: .
+      dockerfile: Rebus/Rebus.Consumer/Dockerfile
+    ports:
+      - 9031:8080
+      - 9032:8081
+
+
+  rebus.producer:
+    image: ${DOCKER_REGISTRY-}rebusproducer
+    depends_on:
+      - kafka
+    build:
+      context: .
+      dockerfile: Rebus/Rebus.Producer/Dockerfile
+    ports:
+      - 9033:8080
+      - 9034:8081
+

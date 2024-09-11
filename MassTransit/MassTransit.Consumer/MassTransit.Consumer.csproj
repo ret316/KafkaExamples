@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..</DockerfileContext>
+    <UserSecretsId>46006b4c-85b3-40fd-aeeb-6f19d780c497</UserSecretsId>
+    <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+  	<PackageReference Include="MassTransit.Kafka" Version="8.2.5" />
+  	<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
+  	<PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.3" />
+  </ItemGroup>
+  
+  <ItemGroup>
+  	<ProjectReference Include="..\..\KafkaExamples.ServiceDefaults\KafkaExamples.ServiceDefaults.csproj" />
+  	<ProjectReference Include="..\MassTransit.Shared\MassTransit.Shared.csproj" />
+  </ItemGroup>
+</Project>

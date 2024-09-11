@@ -1,0 +1,18 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "masstransit.consumer": "StartDebugging",
+        "masstransit.producer": "StartDebugging",
+        "confluentkafka.consumer": "StartDebugging",
+        "confluentkafka.producer": "StartDebugging",
+        "nservicebus.consumer": "StartDebugging",
+        "nservicebus.producer": "StartDebugging",
+        "rebus.consumer": "StartDebugging",
+        "rebus.producer": "StartDebugging"
+      }
+    }
+  }
+}
