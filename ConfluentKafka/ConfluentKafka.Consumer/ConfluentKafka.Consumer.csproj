@@ -18,6 +18,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\KafkaExamples.ServiceDefaults\KafkaExamples.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\..\Rebus\Rebus.Shared\Rebus.Shared.csproj" />
+    <ProjectReference Include="..\ConsluentKafka.Shared\ConsluentKafka.Shared.csproj" />
   </ItemGroup>
 
 </Project>

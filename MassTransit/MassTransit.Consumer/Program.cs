@@ -29,7 +29,7 @@ builder.Services.AddMassTransit(options =>
         rider.UsingKafka((context, k) =>
         {
             //k.Host("kafka:9091");
-            k.Host("localhost:9092");
+            k.Host("localhost:29091");
 
             k.TopicEndpoint<MassTransitMessage>(/*"^topic-[0-9]*"*/ "masstransit-topic", "consumer-group-name", e =>
             {

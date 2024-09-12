@@ -18,11 +18,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
+builder.Services.AddSingleton<MessageCollection>();
+
 builder.Services.AddRebus(configure =>
 {
     return configure
         .Transport(t => t.UseKafka(
-            "localhost:9092", // Адрес Kafka-брокера
+            "localhost:29091", // Адрес Kafka-брокера
             "rebus-topic") // Название топика
         )
         .Routing(r => r.TypeBased().MapAssemblyOf<RebusMessage>("rebus-topic"));

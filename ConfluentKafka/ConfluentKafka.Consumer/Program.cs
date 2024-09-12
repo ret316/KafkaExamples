@@ -16,6 +16,8 @@ builder.Services.AddControllers();
 builder.Services.AddSingleton<ConfluentConsumer>();
 builder.Services.AddHostedService<KafkaConsumerBackgroundService>();
 
+builder.Services.AddSingleton<MessageCollection>();
+
 var app = builder.Build();
 
 app.MapDefaultEndpoints();

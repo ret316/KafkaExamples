@@ -1,12 +1,20 @@
 ﻿using Confluent.Kafka;
+using Rebus.Shared;
 
 namespace ConfluentKafka.Consumer;
 
 public class ConfluentConsumer
 {
-    private readonly string _bootstrapServers = "localhost:9092";
+    private readonly string _bootstrapServers = "localhost:29091";
     private readonly string _groupId = "confluent-group-id";
     private readonly string _topic = "confluent-topic";
+
+    private readonly MessageCollection _messageCollection;
+
+    public ConfluentConsumer(MessageCollection messageCollection)
+    {
+        _messageCollection = messageCollection;
+    }
 
     public void Consume(CancellationToken stoppingToken)
     {
@@ -17,7 +25,7 @@ public class ConfluentConsumer
             AutoOffsetReset = AutoOffsetReset.Earliest
         };
 
-        using (var consumer = new ConsumerBuilder<Null, string>(config).Build())
+        using (var consumer = new ConsumerBuilder<string, string>(config).Build())
         {
             consumer.Subscribe(_topic);
 
@@ -26,6 +34,13 @@ public class ConfluentConsumer
                 while (!stoppingToken.IsCancellationRequested)
                 {
                     var consumeResult = consumer.Consume(stoppingToken);
+
+                    _messageCollection.Add(new RebusMessageWithId 
+                    { 
+                        Id = consumeResult.Message.Key, 
+                        Message = consumeResult.Message.Value 
+                    });
+
                     Console.WriteLine($"Received message: {consumeResult.Message.Value}");
                 }
             }

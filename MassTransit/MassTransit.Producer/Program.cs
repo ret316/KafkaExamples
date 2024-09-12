@@ -24,7 +24,7 @@ builder.Services.AddMassTransit(options =>
         rider.UsingKafka((context, k) =>
         {
             //k.Host("kafka:9091");
-            k.Host("localhost:9092");
+            k.Host("localhost:29091");
             k.ConfigureSend(c =>
             {
                 c.UseRetry(o => o.Immediate(5));

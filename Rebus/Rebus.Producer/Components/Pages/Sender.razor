@@ -1,8 +1,9 @@
 ﻿@page "/sender"
-@using MassTransit.Shared
+@using Rebus.Bus
+@using Rebus.Shared
 @rendermode InteractiveServer
 @inject ILogger<Sender> logger;
-@inject ITopicProducer<string, MassTransitMessage> producer;
+@inject IBus bus;
 
 <PageTitle>Sender</PageTitle>
 
@@ -10,7 +11,6 @@
 <p>This component demonstrates showing data.</p>
 
 <div class="input-group w-50 p-3">
-    <input type="text" aria-label="Id" class="form-control" @bind-value=_id />
     <input type="text" aria-label="Message" class="form-control" @bind-value=_message />
     <button type="button" class="btn btn-primary" @onclick="SendMessage">Send</button>
 </div>
@@ -30,13 +30,10 @@
     {
         logger.LogInformation("sending");
 
-        var id = _id;
-        var message = new MassTransitMessage
-        {
-            Message = _message!
-        };
+        var message = new RebusMessage { Message = _message! };
 
-        await producer.Produce(id, message);
-        logger.LogInformation("Message with id = {0} and text = {1} sended", id, message.Message);
+        await bus.Send(message);
+
+        logger.LogInformation("Message with text = {1} sended", message.Message);
     }
 }

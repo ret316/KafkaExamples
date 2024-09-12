@@ -1,0 +1,38 @@
+﻿@page "/getter"
+@inject ILogger<Getter> _logger;
+@inject MessageCollection _messageCollection;
+@attribute [StreamRendering]
+
+<PageTitle>Getter</PageTitle>
+
+
+<p>This component demonstrates showing data.</p>
+
+@if (_messageCollection is null)
+{
+    <p><em>Nothing...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Message</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var message in _messageCollection)
+            {
+                <tr>
+                    <td>@message.Id</td>
+                    <td>@message.Message</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+}

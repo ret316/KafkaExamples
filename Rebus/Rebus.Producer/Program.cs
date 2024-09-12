@@ -23,7 +23,7 @@ builder.Services.AddRebus(configure => configure
         //    "localhost:9092",
         //    "rebus-topic")
         //)
-        .Transport(t => t.UseKafkaAsOneWayClient("localhost:9092"))
+        .Transport(t => t.UseKafkaAsOneWayClient("localhost:29091"))
         .Routing(r => r.TypeBased().MapAssemblyOf<RebusMessage>("rebus-topic"))
 );
 
