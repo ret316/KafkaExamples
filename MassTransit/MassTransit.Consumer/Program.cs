@@ -2,6 +2,8 @@ using MassTransit;
 using MassTransit.Consumer;
 using MassTransit.Consumer.Components;
 using MassTransit.Shared;
+using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,9 +20,85 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddSingleton<MessageCollection>();
 
+builder.Services.AddDbContext<MasstransitConsumerContext>(options =>
+{
+    options.UseNpgsql("Host=localhost;Port=5432;Database=MTConsumer;Username=postgres;Password=123qweDSA");
+});
+
+var npgBuilder = new NpgsqlConnectionStringBuilder("Host=localhost;Port=5432;Database=MTConsumer;Username=postgres;Password=123qweDSA");
+
+builder.Services.AddOptions<SqlTransportOptions>().Configure(options =>
+{
+    options.Host = npgBuilder.Host;
+    options.Database = npgBuilder.Database;
+    options.Schema = "transport";
+    options.Username = npgBuilder.Username;
+    options.Password = npgBuilder.Password;
+    options.AdminUsername = npgBuilder.Username;
+    options.AdminPassword = npgBuilder.Password;
+});
+
+builder.Services.AddHostedService<MigrationHostedService<MasstransitConsumerContext>>();
+
+builder.Services.AddPostgresMigrationHostedService();
+
 builder.Services.AddMassTransit(options =>
 {
-    options.UsingInMemory();
+    options.SetEntityFrameworkSagaRepositoryProvider(r =>
+    {
+        r.ExistingDbContext<MasstransitConsumerContext>();
+        r.UsePostgres();
+    });
+
+    options.AddSagaRepository<JobSaga>()
+    .EntityFrameworkRepository(r =>
+    {
+        r.ExistingDbContext<MasstransitConsumerContext>();
+        r.UsePostgres();
+    });
+    options.AddSagaRepository<JobTypeSaga>()
+        .EntityFrameworkRepository(r =>
+        {
+            r.ExistingDbContext<MasstransitConsumerContext>();
+            r.UsePostgres();
+        });
+    options.AddSagaRepository<JobAttemptSaga>()
+        .EntityFrameworkRepository(r =>
+        {
+            r.ExistingDbContext<MasstransitConsumerContext>();
+            r.UsePostgres();
+        });
+
+    options.SetKebabCaseEndpointNameFormatter();
+
+    options.AddEntityFrameworkOutbox<MasstransitConsumerContext>(o =>
+    {
+        o.UsePostgres();
+    });
+
+    options.AddConfigureEndpointsCallback((context, _, cfg) =>
+    {
+        cfg.UseDelayedRedelivery(r =>
+        {
+            r.Interval(10000, 15000);
+        });
+
+        cfg.UseMessageRetry(r =>
+        {
+            r.Interval(25, 50);
+        });
+
+        cfg.UseEntityFrameworkOutbox<MasstransitConsumerContext>(context);
+    });
+
+    options.UsingPostgres((context, cfg) =>
+    {
+        cfg.UseSqlMessageScheduler();
+
+        cfg.AutoStart = true;
+
+        cfg.ConfigureEndpoints(context);
+    });
 
     options.AddRider(rider =>
     {
@@ -40,7 +118,9 @@ builder.Services.AddMassTransit(options =>
                 {
                     r.Immediate(5);
                 });
-                e.UseInMemoryOutbox(context);
+                //e.UseInMemoryOutbox(context);
+
+                e.UseEntityFrameworkOutbox<MasstransitConsumerContext>(context);
                 e.UseCircuitBreaker();
             });
         });

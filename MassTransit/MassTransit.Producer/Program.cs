@@ -1,6 +1,9 @@
 using MassTransit;
 using MassTransit.Producer.Components;
 using MassTransit.Shared;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,9 +17,85 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
+builder.Services.AddDbContext<MasstransitProducerContext>(options =>
+{
+    options.UseNpgsql("Host=localhost;Port=5432;Database=MTProducer;Username=postgres;Password=123qweDSA");
+});
+
+var npgBuilder = new NpgsqlConnectionStringBuilder("Host=localhost;Port=5432;Database=MTProducer;Username=postgres;Password=123qweDSA");
+
+builder.Services.AddOptions<SqlTransportOptions>().Configure(options =>
+{
+    options.Host = npgBuilder.Host;
+    options.Database = npgBuilder.Database;
+    options.Schema = "transport";
+    options.Username = npgBuilder.Username;
+    options.Password = npgBuilder.Password;
+    options.AdminUsername = npgBuilder.Username;
+    options.AdminPassword = npgBuilder.Password;
+});
+
+builder.Services.AddHostedService<MigrationHostedService<MasstransitProducerContext>>();
+
+builder.Services.AddPostgresMigrationHostedService();
+
 builder.Services.AddMassTransit(options =>
 {
-    options.UsingInMemory();
+    options.SetEntityFrameworkSagaRepositoryProvider(r =>
+    {
+        r.ExistingDbContext<MasstransitProducerContext>();
+        r.UsePostgres();
+    });
+
+    options.AddSagaRepository<JobSaga>()
+    .EntityFrameworkRepository(r =>
+    {
+        r.ExistingDbContext<MasstransitProducerContext>();
+        r.UsePostgres();
+    });
+    options.AddSagaRepository<JobTypeSaga>()
+        .EntityFrameworkRepository(r =>
+        {
+            r.ExistingDbContext<MasstransitProducerContext>();
+            r.UsePostgres();
+        });
+    options.AddSagaRepository<JobAttemptSaga>()
+        .EntityFrameworkRepository(r =>
+        {
+            r.ExistingDbContext<MasstransitProducerContext>();
+            r.UsePostgres();
+        });
+
+    options.SetKebabCaseEndpointNameFormatter();
+
+    options.AddEntityFrameworkOutbox<MasstransitProducerContext>(o =>
+    {
+        o.UsePostgres();
+    });
+
+    options.AddConfigureEndpointsCallback((context, _, cfg) =>
+    {
+        cfg.UseDelayedRedelivery(r =>
+        {
+            r.Interval(10000, 15000);
+        });
+
+        cfg.UseMessageRetry(r =>
+        {
+            r.Interval(25, 50);
+        });
+
+        cfg.UseEntityFrameworkOutbox<MasstransitProducerContext>(context);
+    });
+
+    options.UsingPostgres((context, cfg) =>
+    {
+        cfg.UseSqlMessageScheduler();
+
+        cfg.AutoStart = true;
+
+        cfg.ConfigureEndpoints(context);
+    });
 
     options.AddRider(rider =>
     {
@@ -33,6 +112,17 @@ builder.Services.AddMassTransit(options =>
         });
     });
 });
+
+builder.Services.AddOptions<MassTransitHostOptions>()
+    .Configure(options =>
+    {
+        options.WaitUntilStarted = true;
+        options.StartTimeout = TimeSpan.FromSeconds(10);
+        options.StopTimeout = TimeSpan.FromSeconds(30);
+        options.ConsumerStopTimeout = TimeSpan.FromSeconds(10);
+    });
+builder.Services.AddOptions<HostOptions>()
+    .Configure(options => options.ShutdownTimeout = TimeSpan.FromMinutes(1));
 
 var app = builder.Build();
 

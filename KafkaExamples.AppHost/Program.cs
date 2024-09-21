@@ -15,14 +15,14 @@ builder.AddProject<Projects.MassTransit_Consumer>("masstransit-consumer")
     .WaitFor(massTransitProducer)
     ;
 
-var confProd = builder.AddProject<Projects.ConfluentKafka_Producer>("confluentkafka-producer")
-    //.WithReference(messaging)
-    ;
+//var confProd = builder.AddProject<Projects.ConfluentKafka_Producer>("confluentkafka-producer")
+//    //.WithReference(messaging)
+//    ;
 
-builder.AddProject<Projects.ConfluentKafka_Consumer>("confluentkafka-consumer")
-    //.WithReference(messaging)
-    .WaitFor(confProd)
-    ;
+//builder.AddProject<Projects.ConfluentKafka_Consumer>("confluentkafka-consumer")
+//    //.WithReference(messaging)
+//    .WaitFor(confProd)
+//    ;
 
 //builder.AddProject<Projects.NServiceBus_Producer>("nservicebus-producer")
 //    //.WithReference(messaging)
@@ -32,13 +32,13 @@ builder.AddProject<Projects.ConfluentKafka_Consumer>("confluentkafka-consumer")
 //    //.WithReference(messaging)
 //    ;
 
-var rebusProducer = builder.AddProject<Projects.Rebus_Producer>("rebus-producer")
-    //.WithReference(messaging)
-    ;
+//var rebusProducer = builder.AddProject<Projects.Rebus_Producer>("rebus-producer")
+//    //.WithReference(messaging)
+//    ;
 
-builder.AddProject<Projects.Rebus_Consumer>("rebus-consumer")
-    //.WithReference(messaging)
-    .WaitFor(rebusProducer)
-    ;
+//builder.AddProject<Projects.Rebus_Consumer>("rebus-consumer")
+//    //.WithReference(messaging)
+//    .WaitFor(rebusProducer)
+//    ;
 
 builder.Build().Run();
