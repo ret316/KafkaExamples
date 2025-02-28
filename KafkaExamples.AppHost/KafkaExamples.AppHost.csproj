@@ -16,6 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CAP\CAP.Consumer\CAP.Consumer.csproj" />
+    <ProjectReference Include="..\CAP\CAP.Producer\CAP.Producer.csproj" />
     <ProjectReference Include="..\ConfluentKafka\ConfluentKafka.Consumer\ConfluentKafka.Consumer.csproj" />
     <ProjectReference Include="..\ConfluentKafka\ConfluentKafka.Producer\ConfluentKafka.Producer.csproj" />
     <ProjectReference Include="..\MassTransit\MassTransit.Consumer\MassTransit.Consumer.csproj" />

@@ -1,0 +1,43 @@
+﻿@page "/sender"
+@using CAP.Shared
+@using DotNetCore.CAP
+@rendermode InteractiveServer
+@inject ILogger<Sender> logger;
+@inject ICapPublisher producer
+
+<PageTitle>Sender</PageTitle>
+
+
+<p>This component demonstrates showing data.</p>
+
+<div class="input-group w-50 p-3">
+    <input type="text" aria-label="Id" class="form-control" @bind-value=_id />
+    <input type="text" aria-label="Message" class="form-control" @bind-value=_message />
+    <button type="button" class="btn btn-primary" @onclick="SendMessage">Send</button>
+</div>
+
+@code {
+
+    private string? _id;
+    private string? _message;
+
+    protected override Task OnInitializedAsync()
+    {
+        _id = Guid.NewGuid().ToString();
+        return base.OnInitializedAsync();
+    }
+
+    public async Task SendMessage()
+    {
+        logger.LogInformation("sending");
+
+        var id = _id;
+        var message = new CapMessage
+        {
+            Message = _message!
+        };
+
+        await producer.PublishAsync("cap-topic", message);
+        logger.LogInformation("Message with id = {0} and text = {1} sended", id, message.Message);
+    }
+}
