@@ -1,0 +1,101 @@
+services:
+
+  postgres:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: DebeziumProducer
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123qweDSA
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    command: 
+      - "postgres"
+      - "-c"
+      - "wal_level=logical"
+      - "-c"
+      - "max_replication_slots=5"
+    networks:
+      - ui-network
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "22181:2181"
+    networks:
+      - ui-network
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - "29091:29091"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29091
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_MESSAGE_MAX_BYTES: 104857600
+      KAFKA_REPLICA_FETCH_MAX_BYTES: 104857600
+      KAFKA_FETCH_MESSAGE_MAX_BYTES: 104857600
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: true
+    networks:
+      - ui-network
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui
+    depends_on:
+      - kafka
+    ports:
+      - "8082:8080"
+    restart: always
+    environment:
+        KAFKA_CLUSTERS_0_NAME: broker-1
+        KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+    networks:
+      - ui-network
+        
+  connect:
+    image: quay.io/debezium/connect:latest
+    depends_on:
+      - kafka
+      - zookeeper
+      - postgres
+    ports:
+      - "8083:8083"
+    environment:
+      BOOTSTRAP_SERVERS: kafka:9092
+      GROUP_ID: connect-cluster
+      CONFIG_STORAGE_TOPIC: connect-configs
+      OFFSET_STORAGE_TOPIC: connect-offsets
+      STATUS_STORAGE_TOPIC: connect-statuses
+      ENABLE_DEBEZIUM_KC_REST_EXTENSION: true
+      ENABLE_DEBEZIUM_SCRIPTING: true
+      CONNECT_REST_EXTENSION_CLASSES: io.debezium.kcrestextension.DebeziumConnectRestExtension
+    networks:
+      - ui-network    
+      
+  debezium-ui:
+    image: quay.io/debezium/debezium-ui:2.4
+    depends_on:
+      - connect
+    ports:
+      - "8080:8080"
+    environment:
+      KAFKA_CONNECT_URIS: http://connect:8083
+    networks:
+      - ui-network
+      
+volumes:
+  postgres-data:
+  
+networks:
+  ui-network:
+    external: false

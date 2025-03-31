@@ -1,4 +1,4 @@
-﻿namespace ConsluentKafka.Shared;
+﻿namespace ConfluentKafka.Shared;
 
 public record ConfluentMessage
 {

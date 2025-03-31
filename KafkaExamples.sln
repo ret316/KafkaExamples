@@ -28,7 +28,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConfluentKafka.Producer", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConfluentKafka.Consumer", "ConfluentKafka\ConfluentKafka.Consumer\ConfluentKafka.Consumer.csproj", "{2F2BA5B8-48EE-48D0-8C6A-E35294BD9728}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsluentKafka.Shared", "ConfluentKafka\ConsluentKafka.Shared\ConsluentKafka.Shared.csproj", "{C2BBB7A3-EF24-44E5-AF8A-C721046BB617}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConfluentKafka.Shared", "ConfluentKafka\ConfluentKafka.Shared\ConfluentKafka.Shared.csproj", "{C2BBB7A3-EF24-44E5-AF8A-C721046BB617}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rebus.Producer", "Rebus\Rebus.Producer\Rebus.Producer.csproj", "{B0EAC7EF-7C2B-4E4B-A68A-1289DA5F1600}"
 EndProject
@@ -47,6 +47,14 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CAP.Producer", "CAP\CAP.Producer\CAP.Producer.csproj", "{B22C8E80-F3AF-F90D-4508-925CE5782AB2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CAP.Shared", "CAP\CAP.Shared\CAP.Shared.csproj", "{FA8FB4AB-89C2-4453-A8E3-00E22253C811}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Debezium", "Debezium", "{8C7B25EA-C717-4FB1-BFA3-80DB96A75E50}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Debezium.Consumer", "Debezium\Debezium.Consumer\Debezium.Consumer.csproj", "{88767779-AC44-9565-27B8-B4E170FD90DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Debezium.Producer", "Debezium\Debezium.Producer\Debezium.Producer.csproj", "{E057D10E-9FE1-C4CB-FF3D-B58A4D547D75}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Debezium.Shared", "Debezium\Debezium.Shared\Debezium.Shared.csproj", "{203D014D-F62D-D239-0C2B-CF1F8A6BCC4F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -126,6 +134,18 @@ Global
 		{FA8FB4AB-89C2-4453-A8E3-00E22253C811}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA8FB4AB-89C2-4453-A8E3-00E22253C811}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA8FB4AB-89C2-4453-A8E3-00E22253C811}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88767779-AC44-9565-27B8-B4E170FD90DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88767779-AC44-9565-27B8-B4E170FD90DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88767779-AC44-9565-27B8-B4E170FD90DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88767779-AC44-9565-27B8-B4E170FD90DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E057D10E-9FE1-C4CB-FF3D-B58A4D547D75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E057D10E-9FE1-C4CB-FF3D-B58A4D547D75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E057D10E-9FE1-C4CB-FF3D-B58A4D547D75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E057D10E-9FE1-C4CB-FF3D-B58A4D547D75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{203D014D-F62D-D239-0C2B-CF1F8A6BCC4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{203D014D-F62D-D239-0C2B-CF1F8A6BCC4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{203D014D-F62D-D239-0C2B-CF1F8A6BCC4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{203D014D-F62D-D239-0C2B-CF1F8A6BCC4F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -146,6 +166,9 @@ Global
 		{71C3AC04-9142-436D-8551-21815861190D} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{B22C8E80-F3AF-F90D-4508-925CE5782AB2} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{FA8FB4AB-89C2-4453-A8E3-00E22253C811} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{88767779-AC44-9565-27B8-B4E170FD90DB} = {8C7B25EA-C717-4FB1-BFA3-80DB96A75E50}
+		{E057D10E-9FE1-C4CB-FF3D-B58A4D547D75} = {8C7B25EA-C717-4FB1-BFA3-80DB96A75E50}
+		{203D014D-F62D-D239-0C2B-CF1F8A6BCC4F} = {8C7B25EA-C717-4FB1-BFA3-80DB96A75E50}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {42AC3DE7-2C0B-4C46-A1FA-BDB6B42B09C9}

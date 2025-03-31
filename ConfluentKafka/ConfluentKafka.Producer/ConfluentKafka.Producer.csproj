@@ -18,7 +18,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\KafkaExamples.ServiceDefaults\KafkaExamples.ServiceDefaults.csproj" />
-    <ProjectReference Include="..\ConsluentKafka.Shared\ConsluentKafka.Shared.csproj" />
+    <ProjectReference Include="..\ConfluentKafka.Shared\ConfluentKafka.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>
