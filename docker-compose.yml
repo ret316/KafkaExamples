@@ -126,3 +126,17 @@ services:
       - 9033:8080
       - 9034:8081
 
+
+  wolverine.consumer:
+    image: ${DOCKER_REGISTRY-}wolverineconsumer
+    build:
+      context: .
+      dockerfile: Wolverine/Wolverine.Consumer/Dockerfile
+
+
+  wolverine.producer:
+    image: ${DOCKER_REGISTRY-}wolverineproducer
+    build:
+      context: .
+      dockerfile: Wolverine/Wolverine.Producer/Dockerfile
+

@@ -11,7 +11,8 @@
         "nservicebus.consumer": "StartDebugging",
         "nservicebus.producer": "StartDebugging",
         "rebus.consumer": "StartDebugging",
-        "rebus.producer": "StartDebugging"
+        "rebus.producer": "StartDebugging",
+        "wolverine.producer": "StartDebugging"
       }
     }
   }

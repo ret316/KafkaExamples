@@ -26,6 +26,8 @@
     <ProjectReference Include="..\NServiceBus\NServiceBus.Producer\NServiceBus.Producer.csproj" />
     <ProjectReference Include="..\Rebus\Rebus.Consumer\Rebus.Consumer.csproj" />
     <ProjectReference Include="..\Rebus\Rebus.Producer\Rebus.Producer.csproj" />
+    <ProjectReference Include="..\Wolverine\Wolverine.Consumer\Wolverine.Consumer.csproj" />
+    <ProjectReference Include="..\Wolverine\Wolverine.Producer\Wolverine.Producer.csproj" />
   </ItemGroup>
 
 </Project>

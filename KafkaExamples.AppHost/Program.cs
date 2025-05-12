@@ -41,8 +41,12 @@ var builder = DistributedApplication.CreateBuilder(args);
 //    .WaitFor(rebusProducer)
 //    ;
 
-builder.AddProject<Projects.CAP_Producer>("cap-producer");
+/*builder.AddProject<Projects.CAP_Producer>("cap-producer");
 
-builder.AddProject<Projects.CAP_Consumer>("cap-consumer");
+builder.AddProject<Projects.CAP_Consumer>("cap-consumer");*/
+
+builder.AddProject<Projects.Wolverine_Producer>("wolverine-producer");
+
+builder.AddProject<Projects.Wolverine_Consumer>("wolverine-consumer");
 
 builder.Build().Run();
